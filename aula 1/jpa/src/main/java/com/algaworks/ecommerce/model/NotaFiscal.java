@@ -1,14 +1,10 @@
 package com.algaworks.ecommerce.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.util.Date;
 
 @Getter
@@ -20,10 +16,15 @@ public class NotaFiscal {
 
     @EqualsAndHashCode.Include
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "pedido_id")
-    private Integer pedidoId;
+    @OneToOne(optional = false)
+    @JoinColumn(name = "pedido_id")
+//    @JoinTable(name = "pedido_nota_fiscal",
+//            joinColumns = @JoinColumn(name = "nota_fiscal_id", unique = true),
+//            inverseJoinColumns = @JoinColumn(name = "pedido_id", unique = true))
+    private Pedido pedido;
 
     private String xml;
 

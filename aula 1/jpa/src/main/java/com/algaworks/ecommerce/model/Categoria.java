@@ -3,7 +3,10 @@ package com.algaworks.ecommerce.model;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -14,12 +17,22 @@ public class Categoria {
 
     @EqualsAndHashCode.Include
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq")
-    @SequenceGenerator(name = "seq", sequenceName = "sequencias_chave_primaria")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String nome;
 
-    @Column(name = "categoria_pai_id")
-    private Integer categoriaPaiId;
+    @ManyToOne
+    @JoinColumn(name = "categoria_pai_id")
+    private Categoria categoriaPai;
+
+    @OneToMany(mappedBy = "categoriaPai")
+    private List<Categoria> categorias;
+
+    @ManyToMany(mappedBy = "categorias")
+    private List<Produto> produtos;
+
+    public Categoria(String nome) {
+        this.nome = nome;
+    }
 }

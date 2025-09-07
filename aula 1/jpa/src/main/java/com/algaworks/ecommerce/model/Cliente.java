@@ -1,21 +1,20 @@
 package com.algaworks.ecommerce.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
-@Entity
+import java.util.List;
+
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Entity
+@Table(name = "cliente")
 public class Cliente {
 
-    @Id
     @EqualsAndHashCode.Include
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String nome;
@@ -23,4 +22,6 @@ public class Cliente {
     @Enumerated(EnumType.STRING)
     private SexoCliente sexo;
 
+    @OneToMany(mappedBy = "cliente")
+    private List<Pedido> pedidos;
 }

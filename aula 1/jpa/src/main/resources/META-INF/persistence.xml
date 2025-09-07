@@ -11,13 +11,13 @@
             <property name="jakarta.persistence.jdbc.password" value="aluno" />
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
 
-            <property name="jakarta.persistence.schema-generation.database.action" value="drop-and-create"/>
+            <property name="jakarta.persistence.schema-generation.database.action" value="update"/>
             <property name="jakarta.persistence.sql-load-script-source" value="META-INF/banco-de-dados/dados-iniciais.sql"/>
 
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
 
-            <property name="hibernate.show_sql" value="true" />
-            <property name="hibernate.format_sql" value="true" />
+            <property name="hibernate.show_sql" value="false" />
+            <property name="hibernate.format_sql" value="false" />
         </properties>
     </persistence-unit>
 </persistence>
