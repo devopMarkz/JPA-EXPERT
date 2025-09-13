@@ -10,20 +10,17 @@ import java.util.List;
 
 @Getter
 @Setter
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-@Table(name = "categoria")
-public class Categoria {
+@Table(name = "categoria",
+        uniqueConstraints = { @UniqueConstraint(name = "unq_nome", columnNames = { "nome" }) })
+public class Categoria extends EntidadeBaseInteger {
 
-    @EqualsAndHashCode.Include
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
+    @Column(length = 100, nullable = false)
     private String nome;
 
     @ManyToOne
-    @JoinColumn(name = "categoria_pai_id")
+    @JoinColumn(name = "categoria_pai_id",
+            foreignKey = @ForeignKey(name = "fk_categoria_categoriapai"))
     private Categoria categoriaPai;
 
     @OneToMany(mappedBy = "categoriaPai")
@@ -31,8 +28,4 @@ public class Categoria {
 
     @ManyToMany(mappedBy = "categorias")
     private List<Produto> produtos;
-
-    public Categoria(String nome) {
-        this.nome = nome;
-    }
 }
