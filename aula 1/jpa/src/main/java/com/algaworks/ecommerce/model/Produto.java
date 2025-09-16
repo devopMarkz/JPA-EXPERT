@@ -2,7 +2,9 @@ package com.algaworks.ecommerce.model;
 
 import com.algaworks.ecommerce.listener.GenericoListener;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
@@ -11,6 +13,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @NamedQueries({
         @NamedQuery(name = "Produto.listar", query = "select p from Produto p"),
         @NamedQuery(name = "Produto.listarPorCategoria", query = "select p from Produto p where exists (select 1 from Categoria c2 join c2.produtos p2 where p2 = p and c2.id = :categoria)")
@@ -62,4 +65,12 @@ public class Produto extends EntidadeBaseInteger {
             joinColumns = @JoinColumn(name = "produto_id", nullable = false,
                     foreignKey = @ForeignKey(name = "fk_produto_atributo_produto")))
     private List<Atributo> atributos;
+
+    public Produto(LocalDateTime dataCriacao, LocalDateTime dataUltimaAtualizacao, String nome, String descricao, BigDecimal preco) {
+        this.dataCriacao = dataCriacao;
+        this.dataUltimaAtualizacao = dataUltimaAtualizacao;
+        this.nome = nome;
+        this.descricao = descricao;
+        this.preco = preco;
+    }
 }
