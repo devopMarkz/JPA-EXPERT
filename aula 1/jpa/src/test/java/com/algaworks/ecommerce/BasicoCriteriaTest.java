@@ -1,15 +1,12 @@
 package com.algaworks.ecommerce;
 
 import com.algaworks.ecommerce.model.Produto;
-import jakarta.persistence.Query;
-import jakarta.persistence.Tuple;
-import jakarta.persistence.TypedQuery;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.*;
+import jakarta.persistence.criteria.*;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class BasicoCriteriaTest extends EntityManagerTest{
@@ -39,15 +36,16 @@ public class BasicoCriteriaTest extends EntityManagerTest{
         CriteriaQuery<Tuple> cq = cb.createTupleQuery();
         Root<Produto> root = cq.from(Produto.class);
 
-        cq.multiselect(root.get("nome").alias("nome"), root.get("descricao").alias("descricao"), root.get("id").alias("id"));
-
         TypedQuery<Tuple> tQuery = entityManager.createQuery(cq);
         List<Tuple> list = tQuery.getResultList();
 
         for (Tuple t : list){
-            System.out.println(t.get("nome"));
-            System.out.println(t.get("descricao"));
-            System.out.println(t.get("id"));
+            List<TupleElement<?>> tpl = t.getElements();
+            Tuple t1 = t;
+            Produto p = (Produto) t1.get(0);
+            System.out.println(p.getNome());
+            System.out.println(p.getDataCriacao());
+            System.out.println(p.getDescricao());
         }
     }
 
@@ -66,6 +64,47 @@ public class BasicoCriteriaTest extends EntityManagerTest{
             System.out.println(obj[0]);
             System.out.println(obj[1]);
         }
+    }
+
+    @Test
+    void buscarTuple2PorIdentificador(){
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Tuple> cq = cb.createTupleQuery();
+        Root<Produto> root = cq.from(Produto.class);
+
+        cq.multiselect(root.get("nome").alias("nome"), root.get("descricao").alias("descricao"));
+
+        TypedQuery<Tuple> query = entityManager.createQuery(cq);
+        List<Tuple> list = query.getResultList();
+
+        for (Tuple t : list){
+            System.out.println("Nome: " + t.get("nome") + " / Descrição: " + t.get("descricao"));
+        }
+    }
+
+    @Test
+    void relembrando(){
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Produto> cq = cb.createQuery(Produto.class);
+        Root<Produto> root = cq.from(Produto.class);
+
+        root.join("categorias", JoinType.LEFT);
+
+        Predicate nomeIgual = cb.equal(root.get("nome"), "Geladeira");
+
+        cq.select(root).where(nomeIgual);
+
+        TypedQuery<Produto> query = entityManager.createQuery(cq);
+
+        Produto produto = query.getSingleResult();
+
+        System.out.println(produto.getNome());
+    }
+
+    @Test
+    void testarCache(){
+        Produto produto = new Produto(LocalDateTime.now(), LocalDateTime.now(), "Prod", "Descr", BigDecimal.valueOf(200.0));
+        Cache cache = entityManagerFactory.getCache();
     }
 
 }

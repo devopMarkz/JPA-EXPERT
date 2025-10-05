@@ -2,7 +2,6 @@ package com.algaworks.ecommerce.model;
 
 import com.algaworks.ecommerce.listener.GenericoListener;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,6 +12,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@Access(AccessType.FIELD)
 @NoArgsConstructor
 @NamedQueries({
         @NamedQuery(name = "Produto.listar", query = "select p from Produto p"),
